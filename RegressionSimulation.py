@@ -8,11 +8,12 @@ import Parser
 
 
 class RegressionSimulation:
-    def __init__(self, X, y, seed_num):
+    def __init__(self, X, y, base_learner, seed_num):
         self.X = X
         self.y = y
         self.train = []
         self.unobserved = []
+        self.base_learner = base_learner
         self.seed_num = seed_num
         seeds = random.sample(range(len(self.X)), seed_num)
         # print(seeds)
@@ -36,10 +37,9 @@ class RegressionSimulation:
             else:
                 self.unobserved.append(i)
 
-    def cross_validation_on_train(self, model, fold):
+    def cross_validation_on_train(self, fold):
         """
         Perform cross validation on training dataset
-        :param model: input training model
         :param fold: number of folds for cross validation
         :return: mean squared error of cross validation
         """
@@ -51,16 +51,15 @@ class RegressionSimulation:
             train_y = [self.y[self.train[i]] for i in train]
             test_X = [self.X[self.train[i]] for i in test]
             test_y = [self.y[self.train[i]] for i in test]
-            model.fit(train_X, train_y)
-            y_predict = model.predict(test_X)
+            self.base_learner.fit(train_X, train_y)
+            y_predict = self.base_learner.predict(test_X)
             for i in range(len(test)):
                 cv_err.append(test_y[i] - y_predict[i])
         return (np.square(cv_err)).mean()
 
-    def predict(self, model):
+    def predict(self):
         """
         Train on training data and predict on unobserved data
-        :param model: training model
         :return: mean square error of predicting unobserved data
         """
         total_err = []
@@ -68,8 +67,8 @@ class RegressionSimulation:
         y_train = [self.y[i] for i in self.train]
         X_test = [self.X[i] for i in self.unobserved]
         y_test = [self.y[i] for i in self.unobserved]
-        model.fit(X_train, y_train)
-        y_predict = model.predict(X_test)
+        self.base_learner.fit(X_train, y_train)
+        y_predict = self.base_learner.predict(X_test)
         for i in range(len(X_test)):
             total_err.append(y_test[i] - y_predict[i])
         return (np.square(total_err)).mean()
@@ -92,6 +91,6 @@ class RegressionSimulation:
 
 if __name__ == "__main__":
     X_, y_ = Parser.parse_csv("regression.csv", 2)
-    cs = RegressionSimulation(X_, y_, 5)
-    print(cs.cross_validation_on_train(LinearRegression(), 5))
-    print(cs.predict(LinearRegression()))
+    cs = RegressionSimulation(X_, y_, LinearRegression(), 5)
+    print(cs.cross_validation_on_train(5))
+    print(cs.predict())

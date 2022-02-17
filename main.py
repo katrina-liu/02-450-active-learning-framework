@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.base import clone
 from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
 
@@ -9,12 +8,11 @@ import Parser
 import RegressionSimulation
 
 
-def train(cycle, stop, model, simulator):
+def train(cycle, stop, simulator):
     """
     Perform training for a simulator
     :param cycle: number of cycles of simulation rounds
     :param stop: stopping criterion
-    :param model: training model
     :param simulator: classification or regression
     :return: training data size, cross validation accuracy/mse, prediction accuracy/mse
     """
@@ -29,8 +27,8 @@ def train(cycle, stop, model, simulator):
 
         while simulator.train_size() <= stop:
             train_size.append(simulator.train_size())
-            cv_acc.append(simulator.cross_validation_on_train(clone(model), 5))
-            pred_acc.append(simulator.predict(clone(model)))
+            cv_acc.append(simulator.cross_validation_on_train(5))
+            pred_acc.append(simulator.predict())
             simulator.increment_train()
         cross_validation_acc.append(cv_acc)
         prediction_acc.append(pred_acc)
@@ -47,10 +45,10 @@ if __name__ == "__main__":
     cycle = 10
     seed_num = 5
     train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
-                                                             GaussianNB(),
                                                              ClassificationSimulation.ClassificationSimulation(
                                                                  class_input_X,
                                                                  class_input_y,
+                                                                 GaussianNB(),
                                                                  seed_num))
     plt.figure()
     plt.plot(range(len(train_size)), train_size)
@@ -77,10 +75,10 @@ if __name__ == "__main__":
 
     regress_input_X, regress_input_y = Parser.parse_csv("regression.csv", 2)
     train_size, cross_validation_mse, prediction_mse = train(cycle, stop,
-                                                             LinearRegression(),
                                                              RegressionSimulation.RegressionSimulation(
                                                                  regress_input_X,
                                                                  regress_input_y,
+                                                                 LinearRegression(),
                                                                  seed_num))
     print(cross_validation_mse, prediction_mse)
 

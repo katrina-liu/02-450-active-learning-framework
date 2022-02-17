@@ -8,13 +8,14 @@ import Parser
 
 
 class ClassificationSimulation:
-    def __init__(self, X, y, seed_num):
+    def __init__(self, X, y, base_learner, seed_num):
         self.X = X
         self.y = y
         self.train = []
         self.unobserved = []
         self.seed_num = seed_num
         seeds = random.sample(range(len(self.X)), seed_num)
+        self.base_learner = base_learner
         for i in range(len(X)):
             if i in seeds:
                 self.train.append(i)
@@ -35,12 +36,9 @@ class ClassificationSimulation:
             else:
                 self.unobserved.append(i)
 
-
-
-    def cross_validation_on_train(self, model, fold):
+    def cross_validation_on_train(self, fold):
         """
         Perform cross validation on training dataset
-        :param model: input training model
         :param fold: number of folds for cross validation
         :return: accuracy of cross validation
         """
@@ -52,17 +50,16 @@ class ClassificationSimulation:
             train_y = [self.y[self.train[i]] for i in train]
             test_X = [self.X[self.train[i]] for i in test]
             test_y = [self.y[self.train[i]] for i in test]
-            model.fit(train_X, train_y)
-            y_predict = model.predict(test_X)
+            self.base_learner.fit(train_X, train_y)
+            y_predict = self.base_learner.predict(test_X)
             for i in range(len(test)):
                 if test_y[i] != y_predict[i]:
                     cv_err += 1
         return 1 - cv_err / len(self.train)
 
-    def predict(self, model):
+    def predict(self):
         """
         Train on training data and predict on unobserved data
-        :param model: training model
         :return: accuracy of predicting unobserved data
         """
         total_err = 0
@@ -70,8 +67,8 @@ class ClassificationSimulation:
         y_train = [self.y[i] for i in self.train]
         X_test = [self.X[i] for i in self.unobserved]
         y_test = [self.y[i] for i in self.unobserved]
-        model.fit(X_train, y_train)
-        y_predict = model.predict(X_test)
+        self.base_learner.fit(X_train, y_train)
+        y_predict = self.base_learner.predict(X_test)
         for i in range(len(X_test)):
             if y_test[i] != y_predict[i]:
                 total_err += 1
@@ -95,6 +92,6 @@ class ClassificationSimulation:
 
 if __name__ == "__main__":
     X_, y_ = Parser.parse_csv("classification.csv", 2)
-    cs = ClassificationSimulation(X_, y_, 5)
-    print(cs.cross_validation_on_train(GaussianNB(), 5))
-    print(cs.predict(GaussianNB()))
+    cs = ClassificationSimulation(X_, y_, GaussianNB(), 5)
+    print(cs.cross_validation_on_train(5))
+    print(cs.predict())
