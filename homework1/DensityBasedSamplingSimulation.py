@@ -24,7 +24,7 @@ class DensityBasedSamplingSimulation(ClassificationSimulation):
         X_test = [self.X[i] for i in self.unobserved]
         test_inform = self.inform_fn(X_train, y_train, X_test,
                                      self.base_learner)
-        print(test_inform)
+        # print(test_inform)
         weighted_inform = map(
             lambda i: self.compute_density(self.unobserved[i]) * test_inform[i],
             range(len(self.unobserved)))
