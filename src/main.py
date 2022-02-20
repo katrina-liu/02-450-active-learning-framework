@@ -1,15 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
-from homework1.UncertainSamplingClassificationSimulation import UncertainSamplingClassificationSimulation
-from homework1.DensityBasedSamplingSimulation import DensityBasedSamplingSimulation
-from homework1.ExpectedErrorReductionSimulation import ExpectedErrorReductionSimulation
-from homework1.MellowUncertainSamplingClassification import MellowUncertainSamplingClassification
 
-import ClassificationSimulation
 import Parser
-import RegressionSimulation
+from homework1.DensityBasedSamplingSimulation import \
+    DensityBasedSamplingSimulation
+from homework1.UncertainSamplingClassificationSimulation import \
+    UncertainSamplingClassificationSimulation
 
 
 def train(cycle, stop, simulator):
@@ -44,10 +41,12 @@ def train(cycle, stop, simulator):
 
 
 if __name__ == "__main__":
-    class_input_X, class_input_y = Parser.parse_csv("classification.csv", 2)
-    class_input_X,class_input_y = Parser.parse_csv("homework1/data_generation/uniform_0_10_100.csv",2)
     class_input_X, class_input_y = Parser.parse_csv(
-        "homework1/data_generation/cluster_0_10_100.csv", 2)
+        "../data/classification.csv", 2)
+    class_input_X, class_input_y = Parser.parse_csv(
+        "../data/uniform_0_10_100.csv", 2)
+    class_input_X, class_input_y = Parser.parse_csv(
+        "../data/cluster_0_10_100.csv", 2)
     stop = 50
     cycle = 10
     seed_num = 5
@@ -119,6 +118,8 @@ if __name__ == "__main__":
                  np.mean(prediction_acc, axis=0),
                  yerr=np.std(prediction_acc, axis=0),
                  label="Uncertain Sampling", fmt='-o', capsize=3)
+
+
     # # plt.legend()
     # # plt.xlabel("Round")
     # # plt.ylabel("Accuracy")
@@ -130,18 +131,25 @@ if __name__ == "__main__":
     def least_confident(x_train, y_train, x_test, learner):
         learner.fit(x_train, y_train)
         test_proba = learner.predict_proba(x_test)
-        return list(map(lambda x: 1-max(x),test_proba))
-    def sim_exp_euclidean_distance(x_1,x_2):
+        return list(map(lambda x: 1 - max(x), test_proba))
+
+
+    def sim_exp_euclidean_distance(x_1, x_2):
         diff_sum = 0
         for i in range(len(x_1)):
-            diff_sum += (x_1[i]-x_2[i])**2
-        return 1/(np.exp(diff_sum**0.5))
+            diff_sum += (x_1[i] - x_2[i]) ** 2
+        return 1 / (np.exp(diff_sum ** 0.5))
+
 
     train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
-                                                             DensityBasedSamplingSimulation(class_input_X,
+                                                             DensityBasedSamplingSimulation(
+                                                                 class_input_X,
                                                                  class_input_y,
                                                                  GaussianNB(),
-                                                                 seed_num,least_confident,sim_exp_euclidean_distance,10))
+                                                                 seed_num,
+                                                                 least_confident,
+                                                                 sim_exp_euclidean_distance,
+                                                                 10))
     # plt.figure()
     # plt.errorbar(range(len(cross_validation_acc[0])),
     #              np.mean(cross_validation_acc, axis=0),

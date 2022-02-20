@@ -22,5 +22,5 @@ def parse_csv(filename, x_dim):
 
 
 if __name__ == "__main__":
-    X_, y_ = parse_csv("classification.csv", 2)
+    X_, y_ = parse_csv("../data/classification.csv", 2)
     print(X_, y_)

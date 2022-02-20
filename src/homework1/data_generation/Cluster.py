@@ -36,4 +36,4 @@ def generate_clustering_sample(r=(0, 10), dim=2, s=100, labels=(1, 2)):
 if __name__ == "__main__":
     d = generate_clustering_sample()
     print(d)
-    write_data_to_csv("cluster_0_10_100.csv", d)
+    write_data_to_csv("../../../data/cluster_0_10_100.csv", d)

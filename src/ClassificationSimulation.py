@@ -99,7 +99,7 @@ class ClassificationSimulation:
 
 
 if __name__ == "__main__":
-    X_, y_ = Parser.parse_csv("classification.csv", 2)
+    X_, y_ = Parser.parse_csv("../data/classification.csv", 2)
     cs = ClassificationSimulation(X_, y_, GaussianNB(), 5)
     print(cs.cross_validation_on_train(5))
     print(cs.predict())

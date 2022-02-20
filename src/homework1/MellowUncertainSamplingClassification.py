@@ -7,9 +7,9 @@ import random
 
 from sklearn.naive_bayes import GaussianNB
 
-import Parser
 from homework1.UncertainSamplingClassificationSimulation import \
     UncertainSamplingClassificationSimulation
+from src import Parser
 
 __author__ = "Xiao(Katrina) Liu"
 __credits__ = ["Xiao Liu"]
@@ -33,7 +33,7 @@ class MellowUncertainSamplingClassification(
 
 
 if __name__ == '__main__':
-    X_, y_ = Parser.parse_csv("../classification.csv", 2)
+    X_, y_ = Parser.parse_csv("../../data/classification.csv", 2)
     cs = MellowUncertainSamplingClassification(X_, y_, GaussianNB(), 5)
     print(cs.cross_validation_on_train(5))
     print(cs.predict())

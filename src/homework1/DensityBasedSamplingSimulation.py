@@ -5,12 +5,13 @@ to add to the training dataset.
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
 
-import Parser
-from ClassificationSimulation import ClassificationSimulation
+from src import Parser
+from src.ClassificationSimulation import ClassificationSimulation
 
 __author__ = "Xiao(Katrina) Liu"
 __credits__ = ["Xiao Liu"]
 __email__ = "xiaol3@andrew.cmu.edu"
+
 
 class DensityBasedSamplingSimulation(ClassificationSimulation):
     def __init__(self, X, y, base_learner, seed_num, inform_fn, sim_fn, beta):
@@ -62,20 +63,25 @@ class DensityBasedSamplingSimulation(ClassificationSimulation):
 
 
 if __name__ == "__main__":
-    X_, y_ = Parser.parse_csv("../classification.csv", 2)
+    X_, y_ = Parser.parse_csv("../../data/classification.csv", 2)
 
 
     def least_confident(x_train, y_train, x_test, learner):
         learner.fit(x_train, y_train)
         test_proba = learner.predict_proba(x_test)
-        return list(map(lambda x: 1-max(x),test_proba))
-    def sim_exp_euclidean_distance(x_1,x_2):
+        return list(map(lambda x: 1 - max(x), test_proba))
+
+
+    def sim_exp_euclidean_distance(x_1, x_2):
         diff_sum = 0
         for i in range(len(x_1)):
-            diff_sum += (x_1[i]-x_2[i])**2
-        return 1/(np.exp(diff_sum**0.5))
+            diff_sum += (x_1[i] - x_2[i]) ** 2
+        return 1 / (np.exp(diff_sum ** 0.5))
 
-    cs = DensityBasedSamplingSimulation(X_, y_, GaussianNB(), 10, least_confident,sim_exp_euclidean_distance,0.5)
+
+    cs = DensityBasedSamplingSimulation(X_, y_, GaussianNB(), 10,
+                                        least_confident,
+                                        sim_exp_euclidean_distance, 0.5)
     print(cs.train)
     cs.increment_train()
     print(cs.train)

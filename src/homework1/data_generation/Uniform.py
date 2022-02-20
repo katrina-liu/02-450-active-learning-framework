@@ -37,4 +37,4 @@ def write_data_to_csv(filename, data, dim=2):
 
 if __name__ == "__main__":
     d = generate_uniform_sample()
-    write_data_to_csv("uniform_0_10_100.csv", d)
+    write_data_to_csv("../../../data/uniform_0_10_100.csv", d)

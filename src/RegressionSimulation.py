@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import KFold
 
-import Parser
+from src import Parser
 
 __author__ = "Xiao(Katrina) Liu"
 __credits__ = ["Xiao Liu"]
@@ -97,7 +97,7 @@ class RegressionSimulation:
 
 
 if __name__ == "__main__":
-    X_, y_ = Parser.parse_csv("regression.csv", 2)
+    X_, y_ = Parser.parse_csv("../data/regression.csv", 2)
     cs = RegressionSimulation(X_, y_, LinearRegression(), 5)
     print(cs.cross_validation_on_train(5))
     print(cs.predict())

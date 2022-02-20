@@ -5,8 +5,8 @@ to add to the training dataset.
 
 from sklearn.naive_bayes import GaussianNB
 
-import Parser
-from ClassificationSimulation import ClassificationSimulation
+from src import Parser
+from src.ClassificationSimulation import ClassificationSimulation
 
 __author__ = "Xiao(Katrina) Liu"
 __credits__ = ["Xiao Liu"]
@@ -49,7 +49,7 @@ class ExpectedErrorReductionSimulation(ClassificationSimulation):
 
 
 if __name__ == "__main__":
-    X_, y_ = Parser.parse_csv("../classification.csv", 2)
+    X_, y_ = Parser.parse_csv("../../data/classification.csv", 2)
     cs = ExpectedErrorReductionSimulation(X_, y_, GaussianNB(), 5)
     for _ in range(5):
         cs.increment_train()
