@@ -1,3 +1,6 @@
+"""A framework for training regression model instrumented with the ability
+to randomly choose the next unobserved data to add to the training dataset.
+"""
 import random
 
 import numpy as np
@@ -5,6 +8,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import KFold
 
 import Parser
+
+__author__ = "Xiao(Katrina) Liu"
+__credits__ = ["Xiao Liu"]
+__email__ = "xiaol3@andrew.cmu.edu"
 
 
 class RegressionSimulation:

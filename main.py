@@ -46,8 +46,8 @@ def train(cycle, stop, simulator):
 if __name__ == "__main__":
     class_input_X, class_input_y = Parser.parse_csv("classification.csv", 2)
     class_input_X,class_input_y = Parser.parse_csv("homework1/data_generation/uniform_0_10_100.csv",2)
-    # class_input_X, class_input_y = Parser.parse_csv(
-    #     "homework1/data_generation/cluster_0_10_100.csv", 2)
+    class_input_X, class_input_y = Parser.parse_csv(
+        "homework1/data_generation/cluster_0_10_100.csv", 2)
     stop = 50
     cycle = 10
     seed_num = 5
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                                                              DensityBasedSamplingSimulation(class_input_X,
                                                                  class_input_y,
                                                                  GaussianNB(),
-                                                                 seed_num,least_confident,sim_exp_euclidean_distance,1))
+                                                                 seed_num,least_confident,sim_exp_euclidean_distance,10))
     # plt.figure()
     # plt.errorbar(range(len(cross_validation_acc[0])),
     #              np.mean(cross_validation_acc, axis=0),
@@ -182,5 +182,5 @@ if __name__ == "__main__":
     plt.xlabel("Round")
     plt.ylabel("Accuracy")
     plt.grid()
-    # plt.show()
-    plt.savefig("hw1_part3_1.png")
+    plt.show()
+    # plt.savefig("hw1_part3_1.png")

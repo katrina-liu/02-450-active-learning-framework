@@ -1,3 +1,7 @@
+"""A framework for training classification model instrumented with the ability
+to randomly choose the next unobserved data to add to the training dataset.
+"""
+
 import random
 
 import numpy as np
@@ -5,6 +9,10 @@ from sklearn.model_selection import KFold
 from sklearn.naive_bayes import GaussianNB
 
 import Parser
+
+__author__ = "Xiao(Katrina) Liu"
+__credits__ = ["Xiao Liu"]
+__email__ = "xiaol3@andrew.cmu.edu"
 
 
 class ClassificationSimulation:
