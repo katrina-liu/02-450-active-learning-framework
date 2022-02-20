@@ -45,16 +45,19 @@ def train(cycle, stop, simulator):
 
 if __name__ == "__main__":
     class_input_X, class_input_y = Parser.parse_csv("classification.csv", 2)
+    class_input_X,class_input_y = Parser.parse_csv("homework1/data_generation/uniform_0_10_100.csv",2)
+    # class_input_X, class_input_y = Parser.parse_csv(
+    #     "homework1/data_generation/cluster_0_10_100.csv", 2)
     stop = 50
     cycle = 10
     seed_num = 5
     # homework 0 plot
-    train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
-                                                             ClassificationSimulation.ClassificationSimulation(
-                                                                 class_input_X,
-                                                                 class_input_y,
-                                                                 GaussianNB(),
-                                                                 seed_num))
+    # train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
+    #                                                          ClassificationSimulation.ClassificationSimulation(
+    #                                                              class_input_X,
+    #                                                              class_input_y,
+    #                                                              GaussianNB(),
+    #                                                              seed_num))
     plt.figure()
     # plt.plot(range(len(train_size)), train_size)
     # plt.xlabel("Round")
@@ -68,10 +71,10 @@ if __name__ == "__main__":
     #              np.mean(cross_validation_acc, axis=0),
     #              yerr=np.std(cross_validation_acc, axis=0),
     #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
-    plt.errorbar(range(len(prediction_acc[0])),
-                 np.mean(prediction_acc, axis=0),
-                 yerr=np.std(prediction_acc, axis=0),
-                 label="Random Selection", fmt='-o', capsize=3)
+    # plt.errorbar(range(len(prediction_acc[0])),
+    #              np.mean(prediction_acc, axis=0),
+    #              yerr=np.std(prediction_acc, axis=0),
+    #              label="Random Selection", fmt='-o', capsize=3)
     # plt.legend()
     # plt.xlabel("Round")
     # plt.ylabel("Accuracy")
@@ -155,16 +158,16 @@ if __name__ == "__main__":
     # #plt.show()
     # plt.savefig("images/dbscs_acc.png")
 
-    _,_,prediction_acc = train(cycle,stop,ExpectedErrorReductionSimulation(class_input_X,class_input_y,GaussianNB(),seed_num))
-    # plt.figure()
-    # plt.errorbar(range(len(cross_validation_acc[0])),
-    #              np.mean(cross_validation_acc, axis=0),
-    #              yerr=np.std(cross_validation_acc, axis=0),
-    #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
-    plt.errorbar(range(len(prediction_acc[0])),
-                 np.mean(prediction_acc, axis=0),
-                 yerr=np.std(prediction_acc, axis=0),
-                 label="Expected Error Reduction", fmt='-o', capsize=3)
+    # _,_,prediction_acc = train(cycle,stop,ExpectedErrorReductionSimulation(class_input_X,class_input_y,GaussianNB(),seed_num))
+    # # plt.figure()
+    # # plt.errorbar(range(len(cross_validation_acc[0])),
+    # #              np.mean(cross_validation_acc, axis=0),
+    # #              yerr=np.std(cross_validation_acc, axis=0),
+    # #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
+    # plt.errorbar(range(len(prediction_acc[0])),
+    #              np.mean(prediction_acc, axis=0),
+    #              yerr=np.std(prediction_acc, axis=0),
+    #              label="Expected Error Reduction", fmt='-o', capsize=3)
     # train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
     #                                                          MellowUncertainSamplingClassification(
     #                                                              class_input_X,
@@ -179,5 +182,5 @@ if __name__ == "__main__":
     plt.xlabel("Round")
     plt.ylabel("Accuracy")
     plt.grid()
-    #plt.show()
-    plt.savefig("hw1_part1.png")
+    # plt.show()
+    plt.savefig("hw1_part3_1.png")
