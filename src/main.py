@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
 from sklearn.naive_bayes import GaussianNB
 
 import Parser
@@ -7,6 +8,8 @@ from homework1.DensityBasedSamplingSimulation import \
     DensityBasedSamplingSimulation
 from homework1.UncertainSamplingClassificationSimulation import \
     UncertainSamplingClassificationSimulation
+from homework2.UncertainSamplingRegressionSimulation import UncertainSamplingRegressionSimulation
+from src import RegressionSimulation
 
 
 def train(cycle, stop, simulator):
@@ -47,6 +50,7 @@ if __name__ == "__main__":
         "../data/uniform_0_10_100.csv", 2)
     class_input_X, class_input_y = Parser.parse_csv(
         "../data/cluster_0_10_100.csv", 2)
+
     stop = 50
     cycle = 10
     seed_num = 5
@@ -80,44 +84,55 @@ if __name__ == "__main__":
     # plt.grid()
     # plt.savefig("images/cs_acc.png")
     #
-    # regress_input_X, regress_input_y = Parser.parse_csv("regression.csv", 2)
-    # train_size, cross_validation_mse, prediction_mse = train(cycle, stop,
-    #                                                          RegressionSimulation.RegressionSimulation(
-    #                                                              regress_input_X,
-    #                                                              regress_input_y,
-    #                                                              LinearRegression(),
-    #                                                              seed_num))
-    # print(cross_validation_mse, prediction_mse)
-    #
-    # plt.figure()
+    regress_input_X, regress_input_y = Parser.parse_csv("../data/regression.csv", 2)
+    train_size, cross_validation_mse, prediction_mse = train(cycle, stop,
+                                                             RegressionSimulation.RegressionSimulation(
+                                                                 regress_input_X,
+                                                                 regress_input_y,
+                                                                 LinearRegression(),
+                                                                 seed_num))
+    plt.errorbar(range(len(prediction_mse[0])),
+                 np.mean(prediction_mse, axis=0),
+                 yerr=np.std(prediction_mse, axis=0),
+                 label="Random", fmt='-o', capsize=3)
+    train_size, cross_validation_mse, prediction_mse = train(cycle, stop,
+                                                             UncertainSamplingRegressionSimulation(
+                                                                 regress_input_X,
+                                                                 regress_input_y,
+                                                                 LinearRegression(),
+                                                                 seed_num))
+    print(cross_validation_mse, prediction_mse)
+
+    #plt.figure()
     # plt.errorbar(range(len(cross_validation_mse[0])),
     #              np.mean(cross_validation_mse, axis=0),
     #              yerr=np.std(cross_validation_mse, axis=0),
     #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
-    # plt.errorbar(range(len(prediction_mse[0])),
-    #              np.mean(prediction_mse, axis=0),
-    #              yerr=np.std(prediction_mse, axis=0),
-    #              label="Prediction of Unobserved", fmt='-o', capsize=3)
-    # plt.legend()
-    # plt.xlabel("Round")
-    # plt.ylabel("Mean Squared Error")
-    # plt.grid()
-    # plt.savefig("images/rs_acc.png")
-    train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
-                                                             UncertainSamplingClassificationSimulation(
-                                                                 class_input_X,
-                                                                 class_input_y,
-                                                                 GaussianNB(),
-                                                                 seed_num))
-    # plt.figure()
-    # plt.errorbar(range(len(cross_validation_acc[0])),
-    #              np.mean(cross_validation_acc, axis=0),
-    #              yerr=np.std(cross_validation_acc, axis=0),
-    #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
-    plt.errorbar(range(len(prediction_acc[0])),
-                 np.mean(prediction_acc, axis=0),
-                 yerr=np.std(prediction_acc, axis=0),
+    plt.errorbar(range(len(prediction_mse[0])),
+                 np.mean(prediction_mse, axis=0),
+                 yerr=np.std(prediction_mse, axis=0),
                  label="Uncertain Sampling", fmt='-o', capsize=3)
+    plt.legend()
+    plt.xlabel("Round")
+    plt.ylabel("Mean Squared Error")
+    plt.grid()
+    plt.show()
+    # plt.savefig("images/rs_acc.png")
+    # train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
+    #                                                          UncertainSamplingClassificationSimulation(
+    #                                                              class_input_X,
+    #                                                              class_input_y,
+    #                                                              GaussianNB(),
+    #                                                              seed_num))
+    # # plt.figure()
+    # # plt.errorbar(range(len(cross_validation_acc[0])),
+    # #              np.mean(cross_validation_acc, axis=0),
+    # #              yerr=np.std(cross_validation_acc, axis=0),
+    # #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
+    # plt.errorbar(range(len(prediction_acc[0])),
+    #              np.mean(prediction_acc, axis=0),
+    #              yerr=np.std(prediction_acc, axis=0),
+    #              label="Uncertain Sampling", fmt='-o', capsize=3)
 
 
     # # plt.legend()
@@ -141,24 +156,24 @@ if __name__ == "__main__":
         return 1 / (np.exp(diff_sum ** 0.5))
 
 
-    train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
-                                                             DensityBasedSamplingSimulation(
-                                                                 class_input_X,
-                                                                 class_input_y,
-                                                                 GaussianNB(),
-                                                                 seed_num,
-                                                                 least_confident,
-                                                                 sim_exp_euclidean_distance,
-                                                                 10))
-    # plt.figure()
-    # plt.errorbar(range(len(cross_validation_acc[0])),
-    #              np.mean(cross_validation_acc, axis=0),
-    #              yerr=np.std(cross_validation_acc, axis=0),
-    #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
-    plt.errorbar(range(len(prediction_acc[0])),
-                 np.mean(prediction_acc, axis=0),
-                 yerr=np.std(prediction_acc, axis=0),
-                 label="Density Based Sampling", fmt='-o', capsize=3)
+    # train_size, cross_validation_acc, prediction_acc = train(cycle, stop,
+    #                                                          DensityBasedSamplingSimulation(
+    #                                                              class_input_X,
+    #                                                              class_input_y,
+    #                                                              GaussianNB(),
+    #                                                              seed_num,
+    #                                                              least_confident,
+    #                                                              sim_exp_euclidean_distance,
+    #                                                              10))
+    # # plt.figure()
+    # # plt.errorbar(range(len(cross_validation_acc[0])),
+    # #              np.mean(cross_validation_acc, axis=0),
+    # #              yerr=np.std(cross_validation_acc, axis=0),
+    # #              label="5-Fold Cross-validation", fmt='-o', capsize=3)
+    # plt.errorbar(range(len(prediction_acc[0])),
+    #              np.mean(prediction_acc, axis=0),
+    #              yerr=np.std(prediction_acc, axis=0),
+    #              label="Density Based Sampling", fmt='-o', capsize=3)
     # plt.legend()
     # plt.xlabel("Round")
     # plt.ylabel("Accuracy")
@@ -186,9 +201,9 @@ if __name__ == "__main__":
     #              np.mean(prediction_acc, axis=0),
     #              yerr=np.std(prediction_acc, axis=0),
     #              label="Mellow Uncertain Sampling", fmt='-o', capsize=3)
-    plt.legend()
-    plt.xlabel("Round")
-    plt.ylabel("Accuracy")
-    plt.grid()
-    plt.show()
+    # plt.legend()
+    # plt.xlabel("Round")
+    # plt.ylabel("Accuracy")
+    # plt.grid()
+    # plt.show()
     # plt.savefig("hw1_part3_1.png")
